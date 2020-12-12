@@ -1,10 +1,10 @@
 const data = require('./data');
 
-const bfs = (tree, cb) => {
+const dfs = (tree, cb) => {
   const queue = [tree];
 
   while (queue.length) {
-    const node = queue.shift();
+    const node = queue.pop();
 
     if (cb(node)) {
       return node;
@@ -16,7 +16,7 @@ const bfs = (tree, cb) => {
   }
 };
 
-bfs(data, (node) => {
+dfs(data, (node) => {
   console.log(node.id);
   return false;
 });
