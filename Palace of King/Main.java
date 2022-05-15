@@ -1,12 +1,25 @@
 import java.util.Scanner;
+import java.util.ArrayDeque;
 
 class Main {
 	private static class Plot {
+		public int id;
 		public int x;
 		public int y;
 		public int width;
 		public int length;
 		public int price;
+		
+		public boolean mark = false;
+		
+		public Plot (int id, int x, int y, int width, int length, int price) {
+			this.id = id;
+			this.x = x;
+			this.y = y;
+			this.width = width;
+			this.length = length;
+			this.price = price;
+		}
 		
 		public String toString() {
 			return "{x: " + x + ", y: " + y + ", width: " + width + ", length: " + length + ", price: " + price + "}";
@@ -19,6 +32,14 @@ class Main {
 		public int money;
 		public int plotNum;
 		public Plot plots[];
+		
+		public TestCase(int width, int length, int money, int plotNum, Plot plots[]) {
+			this.width = width;
+			this.length = length;
+			this.money = money;
+			this.plotNum = plotNum;
+			this.plots = plots;
+		}
 		
 		public String toString() {
 			String plotsStr = "[\n";
@@ -38,9 +59,13 @@ class Main {
 		int caseNum = scanner.nextInt();
 		TestCase tests[] = getTestCases(caseNum, scanner);
 		for (int i = 0; i < caseNum; i++) {
+			System.out.println("--------------------");
 			System.out.println(" - " + tests[i].toString());
+			System.out.println(" result: " + solve(tests[i]));
 		}
-		
+	}
+	
+	public static int solve(TestCase testCase) {
 		
 	}
 	
@@ -48,36 +73,31 @@ class Main {
 		System.out.println("--------------------");
 		TestCase tests[] = new TestCase[caseNum];
 		for (int i = 0; i < caseNum; i++) {
-			tests[i] = new TestCase();
 			System.out.println("Test case" + i + " : ");
 			System.out.println("width: ");
-			tests[i].width = scanner.nextInt();
+			int w = scanner.nextInt();
 			System.out.println("length: ");
-			tests[i].length = scanner.nextInt();
+			int l = scanner.nextInt();
 			System.out.println("money: ");
-			tests[i].money = scanner.nextInt();
+			int money = scanner.nextInt();
 			System.out.println("how many plots: ");
-			tests[i].plotNum = scanner.nextInt();
-			tests[i].plots = new Plot[tests[i].plotNum];
+			int plotNum = scanner.nextInt();
+			Plot plots[] = new Plot[plotNum];
 			for (int j = 0; j < tests[i].plotNum; j++) {
 				System.out.println("--------------------");
 				System.out.println("x: ");
-				tests[i].plots[j] = new Plot();
 				int x = scanner.nextInt();
-				tests[i].plots[j].x = x;
 				System.out.println("y: ");
 				int y = scanner.nextInt();
-				tests[i].plots[j].y = y;
 				System.out.println("width: ");
 				int width = scanner.nextInt();
-				tests[i].plots[j].width = width;
 				System.out.println("length: ");
 				int length = scanner.nextInt();
-				tests[i].plots[j].length = length;
 				System.out.println("price: ");
 				int price = scanner.nextInt();
-				tests[i].plots[j].price = price;
+				plots[j] = new Plot(j, x, y, width, length, price);
 			}
+			tests[i] = new TestCase(w, l, money, plotNum, plots);
 		}
 		return tests;
 	}
