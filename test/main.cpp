@@ -1,8 +1,11 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 using namespace std;
+
+unordered_map<string, string> memo;
 
 bool isMatch(string &password, string &attempt)
 {
@@ -25,12 +28,17 @@ bool isMatch(string &password, string &attempt)
 
 string cracker(vector<string> &passwords, string loginAttempt)
 {
+  if (memo.count(loginAttempt) != 0) {
+    return memo[loginAttempt];
+  }
+
   for (int i = 0, length = passwords.size(); i < length; ++i)
   {
     if (isMatch(passwords[i], loginAttempt))
     {
       if (passwords[i].size() == loginAttempt.size())
       {
+        memo[loginAttempt] = passwords[i];
         return passwords[i];
       }
 
@@ -39,10 +47,12 @@ string cracker(vector<string> &passwords, string loginAttempt)
       {
         continue;
       }
-      return passwords[i] + " " + result;
+      memo[loginAttempt] = passwords[i] + " " + result;
+      return memo[loginAttempt];
     }
   }
 
+  memo[loginAttempt] = "WRONG PASSWORD";
   return "WRONG PASSWORD";
 }
 
@@ -80,8 +90,8 @@ string passwordCracker(vector<string> passwords, string loginAttempt)
 
 void main()
 {
-  vector<string> input = {"bb", "aa", "aaa", "aaaa", "aaaaa", "aaaaaa", "aaaaaaa", "aaaaaaaa", "aaaaaaaaa", "aaaaaaaaaa"};
-  string result = passwordCracker(input, "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaabbaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaabbaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaabaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+  vector<string> input = {"c", "aaaa", "aaaaaa", "aaaaa", "b", "cc", "aaaaaaaaaa", "baaaaa", "aaaac", "caaaaa"};
+  string result = passwordCracker(input, "caaaaaaaaaaaaaaaaaaaaaaaaaaaaaacaaaacbbaaaaabaaaaaaaacaaaaaaaaaacaaaaaaaaccaaaaacccaaaaaaaaaaaaaaacbbaaaaaaaaaacaaaaaaaaacaaaaaaaaaaaaaaaaaaaaaaaaacaaaaccaaaaaaaaacaaaaaabaaaaaccbaaaaabbaaaaaaaaaabaaaaaabaaaaaaaaacbaaaaaccbaaaaaaaaacccbaaaaaaaaabaaaaacccaaaaabcaaaaabaaaaaaaaacaaaaaaaaaaaaaacaaaaaaaaaacaaaaaccccaaaaabaaaaacaaaaaaaaaaaaaaaaaaaaaacccaaaaaaaaaccbaaaaaaaaacaaaaabaaaaaaaaaaccaaaaaacaaaaaccaaaabbaaaaabaaaabaaaaaaaaacbbaaaaabccaaaaaaaaaacbbaaaaabaaaaaaaaabaaaaaaaaaaaaaabaaaaaaaaaaaaaaabaaaaaaaaaaaaaaacccccaaaaaaaaacaaaaaaaaaabaaaaaaaaaaaccbaaaaaaaaaaaaaaaaaaabcaaaaaaaacccaaaaaaaaaaaaaaaaaaaabaaaaaaaaaccaaaacccaaaaaaaaaacbaaaaaaaaaaaaaaabaaaaaaaaaaaaaaacaaaaaaaaaaaaaaaaaacccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacaaaaabaaaaaaaaaaaaaaaaacccaaaaaaaaaacccaaaaabaaaaaaaaaaaaaaacaaaaaaaaacaaaaaaaaaaaaaaabaaaaaaaaaaaaaaabaaaacaaaaaaaaaaaaaaacaaaaaccaaaaccaaaaccaaaaaaaaacbaaaaacaaaaaaaaaaaaaaacaaaacaaaaaaaaaacaaaaaaaaaaaaaaccccaaaaaaaaacaaaacbbaaaaabaaaaaacaaaaaaaaaaaaaaaaaaaaaaaaaaaaacaaaaaaaaaacaaaacaaaaaaaaaabaaaaacaaaacaaaacaaaaacaaaaaaaaacaaaacaaaaaaaaaaaaaaabaaaaaaccaaaaabaaaaaaaaaaaaaaabaaaaaaaacaaaacaaaacaaaacaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaccccccaaaaaaaaaacbaaaaabaaaaabaaaaaaaaaaaabaaaacbaaaacbaaaaaaaaabaaaaaaaaaaaaaaacbaaaaabaaaaaaaaacaaaaaccccaaaaccccccaaaaaaaaaacaaaacccaaaacaaaacbaaaaaaaaaaaaaaabaaaaacbaaaaaaaaaaaaaaaaaaccccaaaaccaaaaaaaaaabaaaaabccaaaaaabaaaaaaaaaacaaaaaaaaaaaaaaaabaaaaaaaaaaaaacaaaacaaaacccccaaaaaaaaaaccaaaaccaaaaacccccaaaaaaaaaccaaaaacaaaaabaaaaaaaaacaaaacaaaaaaaaaaccaaaaaaaaaacaaaacccccccccaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacaaaaacaaaaaaaaaccaaaaaccbaaaaaaaaacccaaaaabbbaaaaacaaaaaaaaaaaaaaaaaaaaaaaaaaaaaacaaaaaaaaaabbbaaaaaaaaaaaaaaacaaaaaaaaaaabcaaaaaaaaaabaaaaaaaaaabaaaaacccaaaaaccaaaaacccccbaaaaaaaaaaaaaaccbaaaaacccaaaaaaaaacaaaaaaaaaaaaaaacaaaaaaaaaacbbaaaaaaaaaaaaaaaaaaaacaaaaaaaaabaaaaaaaaaaaccccaaaaaaaaaaaaaaaaaaacaaaaacaaaaacaaaaabaaaaacaaaaacbcaaaaacaaaaaaaaaaaaaacaaaabaaaaaaaaacccaaaaacaaaacaaaaaaaaaaaaaaaaaaaac");
   // vector<string> input = {"ab", "abcd", "cd"};
   // string result = passwordCracker(input, "abcd");
   cout << result << "\n";
